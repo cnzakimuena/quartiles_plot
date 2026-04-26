@@ -48,9 +48,9 @@ def generate_plot(df,
                          showfliers=False, showbox=False,
                          width=box_width, linewidth=3)
         # box space line fill
-        for i, _ in enumerate(group_variable_order):
+        for i, current_variable in enumerate(group_variable_order):
             a = df
-            b = a[dependent_variable].loc[(a[group_variable] == group_variable_order[i])]
+            b = a[dependent_variable].loc[(a[group_variable] == current_variable)]
             c = b.to_numpy()
             upper_quartile = np.percentile(c, 75)
             lower_quartile = np.percentile(c, 25)
@@ -67,17 +67,17 @@ def generate_plot(df,
         for q, _ in enumerate(group_variable_order):
             # dummy plots, just to get the path objects
             n_hues = len(group_variable_order)
-            a = ax.scatter([q, q], [lower_quartile, upper_quartile],
+            a1 = ax.scatter([q, q], [lower_quartile, upper_quartile],
                            marker=markers[q % len(markers)])
-            current_mk, = a.get_paths()
-            a.remove()
+            current_mk, = a1.get_paths()
+            a1.remove()
             c = ax.collections
             if q == 0:
-                for a in c[::n_hues]:
-                    a.set_paths([current_mk])
+                for a2 in c[::n_hues]:
+                    a2.set_paths([current_mk])
             else:
-                for a in c[q::n_hues]:
-                    a.set_paths([current_mk])
+                for a2 in c[q::n_hues]:
+                    a2.set_paths([current_mk])
 
         ax.axhline(y=0, color='k', linestyle=':', linewidth=2)
 
