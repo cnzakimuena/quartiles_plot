@@ -79,7 +79,7 @@ def generate_plot(df,
                 for a2 in c[q::n_hues]:
                     a2.set_paths([current_mk])
 
-        ax.axhline(y=0, color='k', linestyle=':', linewidth=2)
+        ax.axhline(y=0, color='black', linestyle=':', linewidth=2)
 
         # annotation significance method 1 (using mannwhitneyu test on the data)
         current_df = df
@@ -151,12 +151,14 @@ def generate_plot(df,
 
         # add global title
         if super_title is not None:
-            fig.suptitle(super_title, fontsize="large", color="k")
+            fig.suptitle(super_title, fontsize="large", color="black")
 
         # draw line and text below group labels
         trans = ax.get_xaxis_transform()
-        ax.plot([0.8, 2.3], [-.36, -.36], color="k", transform=trans, clip_on=False, linewidth=2)
-        plt.figtext(0.645, 0.085, "non-setosa", ha="center", va="top", fontsize=20, color="k")
+        ax.plot([0.8, 2.4], [-.36, -.36],
+                color="black", transform=trans, clip_on=False, linewidth=2)
+        plt.figtext(0.645, 0.085, "18S-26S rDNA",
+                    ha="center", va="top", fontsize=18, color="black")
 
 
 if __name__ == '__main__':
