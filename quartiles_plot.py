@@ -20,11 +20,7 @@ def generate_plot(df,
                   group_variable,
                   dependent_variable,
                   group_variable_order,
-                  group_variable_label=None,
-                  dependent_variable_label=None,
-                  dependent_variable_range=None,
-                  palette_list=None,
-                  super_title = None):
+                  **plot_kwargs):
     """
     Generates a quartiles plot with statistical annotations.
     """
@@ -32,8 +28,8 @@ def generate_plot(df,
     sns.set(style="whitegrid", font_scale=1.6)
 
     # default color palette assignment if not provided
-    if palette_list is None:
-        palette_list = sns.color_palette("Blues", len(group_variable_order))
+    if 'palette_list' not in plot_kwargs:
+        plot_kwargs['palette_list'] = sns.color_palette("Blues", len(group_variable_order))
 
     markers = ['s', 'D', 'o', '^']
 
@@ -60,7 +56,7 @@ def generate_plot(df,
         ax = sns.swarmplot(data=df, x=group_variable, y=dependent_variable,
                            order=group_variable_order,
                            hue=group_variable,
-                           palette=palette_list,
+                           palette=plot_kwargs['palette_list'],
                            legend=False,
                            size=6, zorder=0)
         # draw marker shapes
@@ -81,7 +77,7 @@ def generate_plot(df,
 
         ax.axhline(y=0, color='black', linestyle=':', linewidth=2)
 
-        # annotation significance method 1 (using mannwhitneyu test on the data)
+        # annotation significance (using mannwhitneyu test on the data)
         current_df = df
         filtered_df1 = current_df[current_df[group_variable] == group_variable_order[0]]
         filtered_df2 = current_df[current_df[group_variable] == group_variable_order[1]]
@@ -92,10 +88,10 @@ def generate_plot(df,
         # assign annotation values
         annotations = [(group_variable_order[0], group_variable_order[1], p_value)]
 
-        if dependent_variable_range is not None:
+        if 'dependent_variable_range' in plot_kwargs:
             # annotation positioning adjustment
-            specified_lower_y_limit = dependent_variable_range[0]
-            specified_upper_y_limit = dependent_variable_range[1]
+            specified_lower_y_limit = plot_kwargs['dependent_variable_range'][0]
+            specified_upper_y_limit = plot_kwargs['dependent_variable_range'][1]
             current_lower_y_limit = ax.get_ylim()[0]
             current_upper_y_limit = ax.get_ylim()[1]
             y_range_ratio = \
@@ -109,16 +105,18 @@ def generate_plot(df,
                                     text_distance=0.08 * y_range_ratio)
 
         # set y limits
-        if dependent_variable_range is not None:
+        if 'dependent_variable_range' in plot_kwargs:
             # set y ranges
-            ax.set(ylim=(dependent_variable_range[0], dependent_variable_range[1]))
+            ax.set(ylim=(plot_kwargs['dependent_variable_range'][0],
+                         plot_kwargs['dependent_variable_range'][1]))
 
         # set x and y labels
         ax.set_xlabel('')
-        if group_variable_label is not None:
-            ax.set_xticks(range(len(group_variable_label)), labels=group_variable_label)
-        if dependent_variable_label is not None:
-            ax.set_ylabel(dependent_variable_label)
+        if 'group_variable_label' in plot_kwargs:
+            ax.set_xticks(range(len(plot_kwargs['group_variable_label'])),
+                          labels=plot_kwargs['group_variable_label'])
+        if 'dependent_variable_label' in plot_kwargs:
+            ax.set_ylabel(plot_kwargs['dependent_variable_label'])
         ax.tick_params(axis='x', rotation=45)
         ax.tick_params(axis='both', colors='black')
 
@@ -150,8 +148,8 @@ def generate_plot(df,
         plt.subplots_adjust(bottom=0.3, top=0.85, left=0.29, right=0.81)
 
         # add global title
-        if super_title is not None:
-            fig.suptitle(super_title, fontsize="large", color="black")
+        if 'super_title' in plot_kwargs:
+            fig.suptitle(plot_kwargs['super_title'], fontsize="large", color="black")
 
         # draw line and text below group labels
         trans = ax.get_xaxis_transform()
