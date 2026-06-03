@@ -35,7 +35,7 @@ def generate_plot(df,
 
     with plt.rc_context({'axes.edgecolor': 'black'}):
 
-        fig = plt.figure(figsize=(5, 7))
+        fig = plt.figure(figsize=(5, 8))
 
         # box plot
         box_width = 0.7
@@ -109,6 +109,9 @@ def generate_plot(df,
             # set y ranges
             ax.set(ylim=(plot_kwargs['dependent_variable_range'][0],
                          plot_kwargs['dependent_variable_range'][1]))
+            plt.yticks(np.linspace(plot_kwargs['dependent_variable_range'][0],
+                                plot_kwargs['dependent_variable_range'][1],
+                                num=5).tolist())            
 
         # set x and y labels
         ax.set_xlabel('')
@@ -145,7 +148,7 @@ def generate_plot(df,
         # adjust subplots spacing
         # if subplots are added, can include, for e.g., 'wspace=0.4, hspace=0.4'
         # to control padding between subplots
-        plt.subplots_adjust(bottom=0.3, top=0.85, left=0.29, right=0.81)
+        plt.subplots_adjust(bottom=0.35, top=0.85, left=0.3, right=0.8)
 
         # add global title
         if 'super_title' in plot_kwargs:
@@ -155,7 +158,7 @@ def generate_plot(df,
         trans = ax.get_xaxis_transform()
         ax.plot([0.8, 2.4], [-.36, -.36],
                 color="black", transform=trans, clip_on=False, linewidth=2)
-        plt.figtext(0.645, 0.085, "18S-26S rDNA",
+        plt.figtext(0.645, 0.145, "18S-26S rDNA",
                     ha="center", va="top", fontsize=18, color="black")
 
 
